@@ -1,10 +1,9 @@
 const express = require("express");
 const line = require("@line/bot-sdk");
-require("dotenv").config();
+
 const app = express();
 
 // ตั้งค่าจาก LINE Developer Console
-require("dotenv").config();
 
 const config = {
   channelAccessToken: "S1NKnWRq0v0RnpKH0sSVeLlr8Pa3o59AfyJUtitQ8Gi89nPhI8gzHCTYTuu6E+xQb04qZV0/X/wtLasfSV8/OLhH5A9rwji2s+qUw6RIMKvEzRxiP0MWNR8PaykuzofsmxKplu27Oq837vIpu6uGpAdB04t89/1O/w1cDnyilFU=",
