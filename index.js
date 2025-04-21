@@ -54,7 +54,7 @@ function handleEvent(event) {
   } else {
     return client.replyMessage(event.replyToken, {
       type: "text",
-      text: `กรุณาพิมคำสั่งตามนี้`,
+      text: `กรุณาพิมคำสั่งตามนี้ 1.ถ่ายรูป`,
     });
   }
 }
