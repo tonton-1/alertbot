@@ -39,7 +39,7 @@ function handleEvent(event) {
     // ถ้าข้อความคือ "hello" ให้ตอบกลับด้วยข้อความ "สวัสดีครับ"
     return client.replyMessage(event.replyToken, {
       type: "text",
-      text: "สวัสดีครับ",
+      text: "สวัสดีครับผมชื่อบอท",
     });
   } else if (userMessage === "bye") {
     return client.replyMessage(event.replyToken, {
