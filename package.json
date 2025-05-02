@@ -12,6 +12,7 @@
   "dependencies": {
     "@line/bot-sdk": "^9.8.0",
     "express": "^5.1.0",
-    "linebot": "^1.6.1"
+    "linebot": "^1.6.1",
+    "socket.io": "^4.8.1"
   }
 }

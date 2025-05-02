@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <title>LD2410 Real-Time Monitor</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #90caf9;
+      font-size: 36px;
+      margin-bottom: 30px;
+    }
+
+    p {
+      font-size: 20px;
+      margin: 8px 0;
+    }
+
+    .alerttext,
+    .alerttext2 {
+      display: none;
+      font-size: 26px;
+      font-weight: 600;
+      padding: 15px 30px;
+      border-radius: 10px;
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .alerttext {
+      background-color: #37474f;
+      color: #f28b82;
+    }
+
+    .alerttext2 {
+      background-color: #2e7d32;
+      color: #dcedc8;
+    }
+
+    /* Dots animation (ยังนอนอยู่...) */
+    #dots {
+      display: inline-block;
+      width: 1.5em;
+    }
+
+    img {
+      display: block;
+      margin: 20px auto;
+      border-radius: 10px;
+    }
+
+    .sleep {
+      display: none;
+
+    }
+  </style>
+</head>
+
+<body>
+  <h1>📡 ข้อมูลเซนเซอร์ LD2410</h1>
+  <p><strong>📏 Distance:</strong> <span id="dist">--</span> cm</p>
+  <p><strong>⚡ Energy:</strong> <span id="energy">--</span></p>
+
+  <div class="alerttext">🚶‍♂️ ลุกขึ้นแล้ว</div>
+  <div class="alerttext2"><span id="sleep-text">😴 ยังนอนอยู่</span><span id="dots"></span></div>
+  <div class="sleep"><img src="giphy.gif" alt="Computer man" style="width:500px;height:500px;"></div>
+  <div class="wake"><img src="wakeup.gif" alt="Computer man" style="width:1000px;height:500px;"></div>
+  <script>
+    const socket = io();
+    const sleepText = document.getElementById("sleep-text");
+    const dotsEl = document.getElementById("dots");
+    let dotInterval = null;
+
+    function startDots() {
+      let count = 0;
+      dotsEl.textContent = '';
+      clearInterval(dotInterval);
+      dotInterval = setInterval(() => {
+        count = (count + 1) % 4;
+        dotsEl.textContent = '.'.repeat(count);
+      }, 400);
+    }
+
+    function stopDots() {
+      clearInterval(dotInterval);
+      dotsEl.textContent = '';
+    }
+
+    socket.on("sensorUpdate", data => {
+      document.getElementById("dist").textContent = data.distance;
+      document.getElementById("energy").textContent = data.energy;
+
+      const alerttext = document.querySelector(".alerttext");
+      const alerttext2 = document.querySelector(".alerttext2");
+
+      if (data.distance >= 70) {
+        alerttext.style.display = "block";
+        alerttext2.style.display = "none";
+        document.querySelector(".sleep").style.display = "none";
+        document.querySelector(".wake").style.display = "block";
+        stopDots();
+      } else if (data.distance < 70) {
+        alerttext.style.display = "none";
+        alerttext2.style.display = "block";
+        document.querySelector(".sleep").style.display = "block";
+        document.querySelector(".wake").style.display = "none";
+        startDots();
+      } else {
+        alerttext.style.display = "none";
+        alerttext2.style.display = "none";
+        stopDots();
+      }
+    });
+  </script>
+</body>
+
+</html>

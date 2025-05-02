@@ -1,10 +1,12 @@
 const express = require("express");
 const line = require("@line/bot-sdk");
-
-const app = express();
-
+const bodyParser = require("body-parser");
+const app = express(); // ต้องมาก่อน http.createServer(app)
+const http = require("http").createServer(app);
+const io = require("socket.io")(http);
 // ตั้งค่าจาก LINE Developer Console
-
+app.use(express.json());
+app.use(express.static("public"));
 const config = {
   channelAccessToken: "S1NKnWRq0v0RnpKH0sSVeLlr8Pa3o59AfyJUtitQ8Gi89nPhI8gzHCTYTuu6E+xQb04qZV0/X/wtLasfSV8/OLhH5A9rwji2s+qUw6RIMKvEzRxiP0MWNR8PaykuzofsmxKplu27Oq837vIpu6uGpAdB04t89/1O/w1cDnyilFU=",
   channelSecret: "80999893880b70146f568a0c741831d9",
@@ -23,6 +25,7 @@ app.post("/webhook", (req, res) => {
       res.status(500).end();
     });
 });
+
 app.get("/", (req, res) => {
   res.send("Hello, welcome to my LINE Bot!");
 });
@@ -58,9 +61,23 @@ function handleEvent(event) {
     });
   }
 }
+let latestData = { distance: "--", energy: "--" };
+
+app.post("/data", (req, res) => {
+  const { distance, energy } = req.body;
+  latestData = { distance, energy };
+  console.log("ESP32 ส่งมา:", latestData);
+  io.emit("sensorUpdate", latestData);
+  res.sendStatus(200); // ตอบกลับ ESP32
+});
+
+app.get("/data", (req, res) => {
+  res.json(latestData); // แสดง JSON เมื่อเปิดจาก browser
+});
 
 // เริ่มรันเซิร์ฟเวอร์
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
+
+http.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}`);
 });
