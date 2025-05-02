@@ -101,13 +101,13 @@
       const alerttext = document.querySelector(".alerttext");
       const alerttext2 = document.querySelector(".alerttext2");
 
-      if (data.energy >= 100) {
+      if (data.distance >= 90) {
         alerttext.style.display = "block";
         alerttext2.style.display = "none";
         document.querySelector(".sleep").style.display = "none";
         document.querySelector(".wake").style.display = "block";
         stopDots();
-      } else if (data.energy < 100) {
+      } else if (data.distance < 90) {
         alerttext.style.display = "none";
         alerttext2.style.display = "block";
         document.querySelector(".sleep").style.display = "block";
