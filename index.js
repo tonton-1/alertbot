@@ -5,8 +5,7 @@ const app = express(); // ต้องมาก่อน http.createServer(app)
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 // ตั้งค่าจาก LINE Developer Console
-app.use(express.json());
-app.use(express.static("public"));
+
 const config = {
   channelAccessToken: "S1NKnWRq0v0RnpKH0sSVeLlr8Pa3o59AfyJUtitQ8Gi89nPhI8gzHCTYTuu6E+xQb04qZV0/X/wtLasfSV8/OLhH5A9rwji2s+qUw6RIMKvEzRxiP0MWNR8PaykuzofsmxKplu27Oq837vIpu6uGpAdB04t89/1O/w1cDnyilFU=",
   channelSecret: "80999893880b70146f568a0c741831d9",
@@ -25,7 +24,9 @@ app.post("/webhook", (req, res) => {
       res.status(500).end();
     });
 });
+app.use(express.json());
 
+app.use(express.static("public"));
 app.get("/", (req, res) => {
   res.send("Hello, welcome to my LINE Bot!");
 });
